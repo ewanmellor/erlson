@@ -180,7 +180,7 @@ json_empty_list() ->
 
 
 json_null() ->
-    D = #{foo = 'undefined'},
+    D = #{foo = 'null'},
     J = <<"{\"foo\":null}">> = iolist_to_binary(erlson:to_json(D)),
 
     ?assert(erlson:from_json(J) =:= D),
