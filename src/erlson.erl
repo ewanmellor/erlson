@@ -127,7 +127,7 @@ not_found() ->
     Value :: any(),
     Dict :: orddict() ) -> orddict().
 
-store(Name, Value, Dict) when is_atom(Name); is_binary(Name) ->
+store(Name, Value, Dict) when is_atom(Name) ->
     store_val(Name, Value, Dict);
 store(Path, Value, Dict) ->
     try
@@ -146,9 +146,6 @@ store_path([H|T], Value, Dict) ->
     NewInnerDict = store_path(T, Value, InnerDict),
     store_val(H, NewInnerDict, Dict).
 
-
-store_val(Name, Value, Dict) when is_binary(Name) ->
-    orddict:store(decode_json_field_name(Name), Value, Dict);
 
 store_val(Name, Value, Dict) ->
     orddict:store(Name, Value, Dict).
@@ -220,7 +217,7 @@ from_proplist_1(_, _) ->
     throw('erlson_bad_proplist').
 
 
-store_proplist_elem({N, V}, Dict, MaxDepth) when is_atom(N); is_binary(N) ->
+store_proplist_elem({N, V}, Dict, MaxDepth) when is_atom(N) ->
     Value =
         case MaxDepth of
             0 -> V; % we've riched the maximum nesting depth
@@ -233,7 +230,7 @@ store_proplist_elem({N, V}, Dict, MaxDepth) when is_atom(N); is_binary(N) ->
         end,
     store_val(N, Value, Dict);
 
-store_proplist_elem(X, Dict, _MaxDepth) when is_atom(X); is_binary(X) ->
+store_proplist_elem(X, Dict, _MaxDepth) when is_atom(X) ->
     store_val(X, true, Dict);
 
 store_proplist_elem(_X, _Dict, _MaxDepth) ->
@@ -359,8 +356,9 @@ from_json_fields(L) ->
 
 
 store_json_field({N, V}, Dict) ->
+    Name = decode_json_field_name(N),
     Value = decode_json_term(V),
-    store_val(N, Value, Dict).
+    store_val(Name, Value, Dict).
 
 
 % the way Erlson treats field names is important. Each field can be represented
