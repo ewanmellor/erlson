@@ -300,7 +300,6 @@ encode_json_term(L) when is_list(L) ->
         % otherwise, encode as JSON array
         [ encode_json_term(X) || X <- L ]
     end;
-encode_json_term({}) -> {struct, []};
 encode_json_term(_) ->
     throw('erlson_bad_json').
 
